@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { login, createUser } = require("../controllers/users");
+const { login, createUser, getUser } = require("../controllers/users");
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ router.post("/signin", login);
 router.post("/signup", createUser);
 
 // Routes
+router.get("/users/me", getUser);
 
 // Handle unknown routes
 router.use((req, res, next) => {

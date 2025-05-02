@@ -57,9 +57,23 @@ const login = (req, res, next) => {
       }
       return next(err);
     });
+    
 };
+
+const getUser = async (req, res, next) => {
+      try {
+        const user = await User.findById(req.user._id).select("-password");
+        if (!user) {
+          return next(new StatusNotFound("User not found"));
+        }
+        res.status(200).send(user);
+      } catch (err) {
+        return next(new StatusDefault("Internal Server Error"));
+      }
+}
 
 module.exports = {
   createUser,
   login,
+  getUser,
 };
