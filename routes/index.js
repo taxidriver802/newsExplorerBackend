@@ -1,6 +1,8 @@
 const express = require("express");
 
+const { StatusNotFound } = require("../utils/StatusError/index");
 const { login, createUser, getUser } = require("../controllers/users");
+const auth = require("../middlewares/auth");
 
 const router = express.Router();
 
@@ -9,7 +11,7 @@ router.post("/signin", login);
 router.post("/signup", createUser);
 
 // Routes
-router.get("/users/me", getUser);
+router.get("/users/me", auth, getUser);
 
 // Handle unknown routes
 router.use((req, res, next) => {

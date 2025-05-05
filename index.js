@@ -10,6 +10,16 @@ app.use(cors());
 app.use(express.json());
 app.use("/", require("./routes/index.js"));
 
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+
+  res.status(statusCode).json({
+    message: statusCode === 500
+      ? 'An internal server error occurred'
+      : message,
+  });
+});
+
 mongoose.set("strictQuery", true);
 
 mongoose

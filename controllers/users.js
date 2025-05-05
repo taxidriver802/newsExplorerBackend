@@ -7,6 +7,8 @@ const {
   StatusBadRequest,
   StatusConflict,
   StatusUnauthorized,
+  StatusDefault,
+  StatusNotFound
 } = require("../utils/StatusError/index");
 
 const createUser = (req, res, next) => {
@@ -22,9 +24,10 @@ const createUser = (req, res, next) => {
       });
     })
     .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d" });
       const userWithoutPassword = user.toObject();
       delete userWithoutPassword.password;
-      res.status(201).send(userWithoutPassword);
+      res.status(201).send({ token, user: userWithoutPassword }); 
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
@@ -61,6 +64,7 @@ const login = (req, res, next) => {
 };
 
 const getUser = async (req, res, next) => {
+  
       try {
         const user = await User.findById(req.user._id).select("-password");
         if (!user) {
